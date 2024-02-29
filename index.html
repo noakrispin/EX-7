@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Image Browser</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+      body,
+      html {
+        height: 100%;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #f0f0f0;   
+      }
+      .image-container {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow for styling */
+        background-color: #fff; /* Background for the image container */
+        border-radius: 12px; /* Rounded corners for the container */
+        padding: 20px;
+        max-width: 800px; /* Limit the width of the container */
+        max-height: 600px; /* Limit the height of the container */
+        margin: auto; /* Center the container horizontally and vertically */
+        overflow: hidden; /* Ensures no overflow out of the container */
+        justify-content: center; /* Center content horizontally */
+      }
+      .thumbnails {
+        display: flex;
+        justify-content: center;
+        padding: 10px;
+        background-color: #f0f0f0; 
+        width: 100%;
+        overflow-x: auto; 
+        border-radius: 8px; /* Rounded corners for the thumbnail container */
+      }
+      .thumbnail {
+        margin: 0 10px;
+        cursor: pointer;
+        border: 2px solid transparent; 
+        border-radius: 8px; /* Rounded corners for the thumbnails */
+        transition: transform 0.3s ease;
+      }
+      .thumbnail:hover {
+        transform: scale(1.1);
+        border-color: #333; /* Change border color on hover */
+      }
+    .main-image {
+      position: relative;
+      height: 400px;
+      width: 100%;
+      margin-top: 20px; /* Add some space between thumbnails and main image */
+      overflow: hidden; /* Ensure image fits within container */
+      display: flex; /* Use flexbox */
+      justify-content: center; /* Center horizontally */
+      align-items: center; /* Center vertically */
+    }
+      .main-image img {
+        max-width: 100%; 
+        max-height: 100%;
+        object-fit: contain; /* Maintain aspect ratio of image */
+        border-radius: 8px; /* Rounded corners for the main image */
+      }
+      .arrows {
+        display: flex;
+        justify-content: center; /* Center arrows horizontally */
+        margin-top: 10px;
+      }
+      .arrow {
+        font-size: 24px;
+        cursor: pointer;
+        margin: 0 10px;
+      }
+    </style>
+    <script>
+      angular
+        .module("imageBrowserApp", [])
+        .controller("ImageController", function ($scope) {
+          $scope.images = [];
+          for (let i = 1; i <= 10; i++) {
+            $scope.images.push({
+              id: i,
+              url: `https://picsum.photos/id/${i}/350/350`,
+              thumbnailUrl: `https://picsum.photos/id/${i}/50/50`,
+            });
+          }
+
+          $scope.selectedImageIndex = 0;
+
+          $scope.selectImage = function (index) {
+            $scope.selectedImageIndex = index;
+          };
+
+          $scope.nextImage = function () {
+            $scope.selectedImageIndex = ($scope.selectedImageIndex + 1) % $scope.images.length;
+          };
+
+          $scope.prevImage = function () {
+            $scope.selectedImageIndex = ($scope.selectedImageIndex - 1 + $scope.images.length) % $scope.images.length;
+          };
+        });
+    </script>
+  </head>
+  <body ng-app="imageBrowserApp" ng-controller="ImageController">
+    <div class="image-container">
+      <div class="thumbnails">
+        <img
+          ng-repeat="image in images"
+          ng-src="{{image.thumbnailUrl}}"
+          alt="Thumbnail"
+          ng-click="selectImage($index)"
+          class="thumbnail"
+        />
+      </div>
+      <div class="main-image">
+        <img
+          ng-src="{{images[selectedImageIndex].url}}"
+          alt="Selected"
+          style="max-width: 100%; max-height: 100%"
+        />
+      </div>
+      <div class="arrows">
+        <span class="arrow" ng-click="prevImage()">
+          &#10094;
+        </span>
+        <span class="arrow" ng-click="nextImage()">
+          &#10095;
+        </span>
+      </div>
+    </div>
+  </body>
+</html>
